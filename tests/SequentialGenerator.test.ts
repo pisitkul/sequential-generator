@@ -1,4 +1,4 @@
-import SequentialGenerator from "../src/SequentialGenerator";
+import SequentialGenerator from "../src";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
