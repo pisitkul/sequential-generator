@@ -1,5 +1,5 @@
 {
-  "name": "three-prefix-code",
+  "name": "sequential-generator",
   "version": "1.0.0",
   "description": "A simple generator for creating sequential codes with prefix and date",
   "main": "dist/index.js",
@@ -9,6 +9,9 @@
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "three",
     "code",
@@ -19,6 +22,10 @@
     "unique"
   ],
   "author": "shitdogg <pratchaya.ueapisitkul@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shitdogg/sequential-generator.git"
+  },
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {

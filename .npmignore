@@ -1,0 +1,7 @@
+src/
+tests/
+*.log
+*.env
+jest.config.js
+tsconfig.json
+.gitattributes
