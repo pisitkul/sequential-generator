@@ -2,57 +2,58 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
-// ติดตั้ง plugin ให้ dayjs
+// Setup dayjs plugins
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export class SequentialGenerator {
-  private shortCode: string;
+  private prefix: string;
   private timeZone: string;
-  private today: string;
+  private dateString: string;
 
-  constructor(shortCode?: string) {
-    this.shortCode = shortCode || "SEX";
-    this.timeZone = "Asia/Bangkok";
-    this.today = dayjs().tz(this.timeZone).format("YYMMDD");
+  constructor(prefix: string, timeZone: string, dateFormat: string = "YYMMDD") {
+    if (!prefix) throw new Error("prefix is required");
+    if (!timeZone) throw new Error("timeZone is required");
+
+    this.prefix = prefix;
+    this.timeZone = timeZone;
+    this.dateString = dayjs().tz(this.timeZone).format(dateFormat);
   }
 
-  // สร้างหมายเลขใหม่
+  // Generate new sequential code
   generate(): string {
-    return `${this.shortCode}${this.today}0001`;
+    return `${this.prefix}${this.dateString}0001`;
   }
 
-  // ตรวจสอบความถูกต้องของหมายเลข
-  validate(shippedInfoNumber: string): boolean {
-    if (!shippedInfoNumber) {
-      throw new Error("ShippedInfoNumber is required");
+  // Validate a generated code
+  validate(code: string): boolean {
+    if (!code) {
+      throw new Error("code is required");
     }
 
-    const platformCode = shippedInfoNumber.substring(0, 3);
-    const shippedDate = shippedInfoNumber.substring(3, 9);
-    const formatShippedDate = dayjs(shippedDate, "YYMMDD").tz(this.timeZone);
+    const codePrefix = code.substring(0, 3);
+    const codeDate = code.substring(3, 9);
+    const parsedDate = dayjs(codeDate, "YYMMDD").tz(this.timeZone);
 
-    return (
-      platformCode === this.shortCode && formatShippedDate.isSame(this.today)
-    );
+    return codePrefix === this.prefix && parsedDate.isSame(this.dateString);
   }
 
-  // เพิ่มหมายเลขถัดไป
-  increment(shippedInfoNumber: string): string {
-    if (!shippedInfoNumber) {
-      throw new Error("ShippedInfoNumber is required");
+  // Increment the last sequential code
+  increment(currentCode: string): string {
+    if (!currentCode) {
+      throw new Error("currentCode is required");
     }
 
-    const latestNumber = shippedInfoNumber.substring(9);
-    const shippedInfo = shippedInfoNumber.substring(0, 9);
-    const currentNumber = Number(latestNumber);
-    const maxNumber = 9999;
+    const sequenceNumber = currentCode.substring(9);
+    const codeBase = currentCode.substring(0, 9);
+    const number = Number(sequenceNumber);
+    const max = 9999;
 
-    if (currentNumber === maxNumber) {
+    if (number === max) {
       throw new Error("Maximum number reached. Cannot increment.");
     }
 
-    const nextNumber = String(currentNumber + 1).padStart(4, "0");
-    return `${shippedInfo}${nextNumber}`;
+    const nextSequence = String(number + 1).padStart(4, "0");
+    return `${codeBase}${nextSequence}`;
   }
 }
