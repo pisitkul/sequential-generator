@@ -4,4 +4,3 @@ tests/
 *.env
 jest.config.js
 tsconfig.json
-.gitattributes

@@ -23,7 +23,7 @@ npm install sequential-generator
 ## Usage 🛠️
 
 ```typescript
-import { SequentialGenerator } from 'sequential-generator';
+import SequentialGenerator  from 'sequential-generator';
 
 // Create a generator with prefix, timezone, default date format and sequence length
 const generator = new SequentialGenerator('SEX', 'Asia/Bangkok');
