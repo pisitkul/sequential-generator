@@ -24,7 +24,7 @@
   "author": "shitdogg <pratchaya.ueapisitkul@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shitdogg/sequential-generator.git"
+    "url": "git+https://github.com/pisitkul/sequential-generator.git"
   },
   "license": "MIT",
   "type": "commonjs",
