@@ -1,0 +1,15 @@
+# Node modules
+node_modules/
+
+# Dist folder (output of the build process)
+dist/
+
+# Logs
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# OS generated files
+.DS_Store
+Thumbs.db

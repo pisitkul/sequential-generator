@@ -1,0 +1,31 @@
+{
+  "name": "three-prefix-code",
+  "version": "1.0.0",
+  "description": "A simple generator for creating sequential codes with prefix and date",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "three",
+    "code",
+    "prefix",
+    "generator",
+    "date",
+    "invoice",
+    "unique"
+  ],
+  "author": "shitdogg <pratchaya.ueapisitkul@gmail.com>",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "dayjs": "^1.11.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "typescript": "^5.8.3"
+  }
+}
