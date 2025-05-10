@@ -1,6 +1,6 @@
 {
   "name": "sequential-generator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple generator for creating sequential codes with prefix and date",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
