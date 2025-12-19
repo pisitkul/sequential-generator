@@ -1,97 +1,143 @@
 # Sequential Generator 🚀
 
-A simple, timezone-aware sequential code generator with date prefix. This package is useful for generating sequential codes that include a timestamp-based prefix, ensuring uniqueness and easy traceability.
+A simple, timezone-aware sequential code generator with a date-based prefix.
+Designed for generating readable, traceable, and unique reference codes.
 
-เครื่องมือสร้างโค้ดลำดับที่ง่ายและรองรับ timezone โดยมีพรีฟิกซ์ที่รวมวันที่ ตัวโปรแกรมนี้เหมาะสำหรับการสร้างโค้ดที่มีลำดับต่อเนื่องซึ่งมีพรีฟิกซ์เป็นข้อมูลวันที่ ช่วยให้โค้ดมีความเป็นเอกลักษณ์และสามารถตรวจสอบย้อนกลับได้ง่าย
+Perfect for invoices, orders, tickets, documents, or any system that requires
+human-readable sequential identifiers.
 
-## Features 🌟
+---
 
-| English | ไทย |
-|---------|-----|
-| **Generate Sequential Codes**: Creates codes formatted as `{prefix}{date}{sequential number}`, e.g., `SEX2305110001`. | **สร้างโค้ดลำดับต่อเนื่อง**: สร้างโค้ดในรูปแบบ `{prefix}{date}{sequential number}` เช่น `SEX2305110001` |
-| **Timezone-Aware**: Supports time zone specification (e.g., `Asia/Bangkok`). | **รองรับ Timezone**: รองรับการกำหนดโซนเวลา (เช่น `Asia/Bangkok`) |
-| **Customizable Date Format**: Supports custom date formats, default is `YYYYMMDD`. | **รูปแบบวันที่สามารถกำหนดได้**: รองรับการกำหนดรูปแบบวันที่ตามต้องการ โดยค่าเริ่มต้นคือ `YYYYMMDD` |
-| **Flexible Sequence Length**: Configure the number of digits in the sequence (default: 4 digits, e.g., `0001`). | **ความยืดหยุ่นในความยาวของลำดับ**: สามารถกำหนดจำนวนหลักของลำดับได้ โดยค่าเริ่มต้นคือ 4 หลัก (เช่น `0001`) |
-| **Max Sequence Limit**: Generator stops when reaching maximum value (e.g., `9999` for 4 digits). | **จำกัดจำนวนสูงสุดของลำดับ**: เมื่อถึงลำดับสูงสุด (เช่น `9999` สำหรับ 4 หลัก) จะไม่สามารถเพิ่มลำดับได้อีก |
+## ✨ Features
 
-## Installation 📦
+* **Sequential Code Generation**
+  Generates codes in the format `{prefix}{date}{sequence}`
+  Example: `INV202305110001`
+
+* **Timezone-Aware**
+  Correctly calculates dates based on a specified timezone
+  (e.g. `Asia/Bangkok`, `America/New_York`)
+
+* **Custom Date Format**
+  Supports custom date formats (default: `YYYYMMDD`)
+
+* **Configurable Sequence Length**
+  Control the number of digits in the sequence
+  (default: 4 digits → `0001`)
+
+* **Automatic Sequence Expansion**
+  Automatically increases sequence length when the limit is reached
+  (`9999` → `00001`)
+
+* **Custom Separator**
+  Optional separator between segments
+  Example: `INV-20230101-001`
+
+---
+
+## 📦 Installation
 
 ```bash
 npm install sequential-generator
 ```
 
-## Usage 🛠️
+---
 
-```typescript
-import SequentialGenerator  from 'sequential-generator';
+## 🛠 Usage
 
-// Create a generator with prefix, timezone, default date format and sequence length
-const generator = new SequentialGenerator('SEX', 'Asia/Bangkok');
+```ts
+import { SequentialGenerator } from 'sequential-generator';
+
+const generator = new SequentialGenerator({
+  prefix: 'INV',
+  timeZone: 'Asia/Bangkok',
+  separator: '-',
+});
 
 // Generate a new code
-const newCode = generator.generate();
-console.log(newCode);  // Example output: SEX2305110001
+const code = generator.generate();
+console.log(code);
+// INV-20230511-0001
 
-// Validate a code
-const isValid = generator.validate('SEX2305110001');
-console.log(isValid);  // true or false
+// Validate an existing code
+console.log(generator.validate('INV-20230511-0001'));
+// true
 
-// Increment an existing code
-const incrementedCode = generator.increment('SEX2305110001');
-console.log(incrementedCode);  // Example output: SEX2305110002
+// Increment a code (stateless / DB-friendly)
+console.log(generator.increment('INV-20230511-0001'));
+// INV-20230511-0002
 ```
 
-## Custom Configuration ⚙️
+---
 
-```typescript
-// Create a generator with custom date format and sequence length
-const generator = new SequentialGenerator(
-  'INV',                // prefix
-  'America/New_York',   // timeZone
-  'YYMMDD',            // custom date format
-  6                    // 6-digit sequence (e.g., 000001)
-);
+## ⚙️ Custom Configuration
+
+```ts
+const generator = new SequentialGenerator({
+  prefix: 'INV',
+  timeZone: 'America/New_York',
+  dateFormat: 'YYMMDD',
+  sequentialLength: 6,
+});
 ```
 
-## Max Sequence Limit ⚠️
+---
 
-If the sequence reaches the maximum value based on the defined sequence length, the generator will throw an error:
+## 📚 API Reference
 
-```typescript
-const maxCode = 'SEX2305119999';  // Maximum for 4-digit sequence
-try {
-  console.log(generator.increment(maxCode));
-} catch (error) {
-  console.error(error.message);  // Output: "Maximum number reached. Cannot increment."
-}
-```
-
-## API Reference 📚
-
-### Class: `SequentialGenerator`
+### `class SequentialGenerator`
 
 #### Constructor
 
-```typescript
-constructor(
-  prefix: string,
-  timeZone: string,
-  dateFormat: string = "YYYYMMDD",
-  sequenceLength: number = 4
-)
+```ts
+new SequentialGenerator(options: {
+  prefix: string;
+  timeZone: string;
+  dateFormat?: string;        // default: YYYYMMDD
+  sequentialLength?: number; // default: 4
+  separator?: string;
+});
 ```
 
 #### Methods
 
-| Method | Description |
-|--------|-------------|
-| `generate()` | Generates a new sequential code based on current date |
-| `validate(code: string)` | Validates if a given code follows the expected format |
-| `increment(code: string)` | Returns the next sequential code in the sequence |
-| `extractDate(code: string)` | Extracts the date component from a code |
-| `extractSequence(code: string)` | Extracts the sequence number from a code |
+| Method                  | Description                                               |
+| ----------------------- | --------------------------------------------------------- |
+| `generate()`            | Generates a new sequential code based on the current date |
+| `validate(code)`        | Validates whether a code matches the expected format      |
+| `increment(code)`       | Returns the next sequential code (stateless)              |
+| `extractDate(code)`     | Extracts the date portion from a code                     |
+| `extractSequence(code)` | Extracts the numeric sequence from a code                 |
 
-## License 📝
+---
+
+## 📅 Supported Date Formats
+
+This library supports all date formats provided by **Day.js**.
+Commonly used patterns include:
+
+| Pattern | Description      | Example |
+| ------- | ---------------- | ------- |
+| `YYYY`  | 4-digit year     | `2024`  |
+| `YY`    | 2-digit year     | `24`    |
+| `MM`    | Month (2 digits) | `01`    |
+| `DD`    | Day (2 digits)   | `31`    |
+| `HH`    | Hour (24h)       | `13`    |
+| `mm`    | Minute           | `45`    |
+| `Q`     | Quarter          | `1`     |
+
+### Examples
+
+* `YYYYMMDD` → `20241231` (daily reset)
+* `YYYYMM` → `202412` (monthly reset)
+* `YY` → `24` (yearly reset)
+
+---
+
+## 📝 License
 
 MIT License
-Copyright (c) 2024 Pratchaya Ueapisitkul
+Copyright (c) 2024
+**Pratchaya Ueapisitkul**
+
+---

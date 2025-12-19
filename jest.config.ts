@@ -3,6 +3,7 @@ import type { Config } from "@jest/types";
 const config: Config.InitialOptions = {
   preset: "ts-jest",
   testEnvironment: "node",
+  testMatch: ["**/src/**/*.spec.ts"],
 };
 
-export default config;
+module.exports = config;

@@ -2,6 +2,42 @@
 
 This document outlines the plan for implementing new features as requested.
 
+## Feature: Implement Missing Core Methods
+
+**Objective:** Implement the `increment`, `validate`, `extractDate`, and `extractSequence` methods as described in the README, as they are currently missing from the implementation.
+
+**Files to Modify:**
+- `src/SequentialGenerator.ts`
+- `src/SequentialGenerator.spec.ts`
+
+**Implementation Steps:**
+
+1.  **Implement `extractDate(code: string)`:**
+    -   Calculate the start and end indices of the date part based on `prefix` length and `dateFormat` length.
+    -   Return the substring.
+
+2.  **Implement `extractSequence(code: string)`:**
+    -   Calculate the start index of the sequence part.
+    -   Return the substring converted to a number.
+
+3.  **Implement `validate(code: string)`:**
+    -   Check if the code starts with the configured `prefix`.
+    -   Extract the date part and validate it using `dayjs`.
+    -   Extract the sequence part and validate that it is a valid number.
+    -   Check if the total length matches the expected length.
+
+4.  **Implement `increment(code: string)`:**
+    -   Validate the input code using `validate()`.
+    -   Extract the sequence number.
+    -   Increment the sequence number by 1.
+    -   Check if the new sequence number exceeds the maximum allowed by `sequentialLength`.
+    -   Reconstruct the code string with the new sequence number.
+
+5.  **Add new tests in `src/SequentialGenerator.spec.ts`:**
+    -   Add test cases for `validate` with valid and invalid codes.
+    -   Add test cases for `increment` to ensure it correctly increments the sequence.
+    -   Add test cases for `extractDate` and `extractSequence`.
+
 ## Feature 1: Automatic Sequence Length Increment
 
 **Objective:** When the sequence number reaches its maximum (e.g., 999), the next number should not throw an error. Instead, the sequence length should increase by one, and the number should reset to 1 (e.g., `...999` becomes `...0001`).
