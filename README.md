@@ -31,7 +31,25 @@ human-readable sequential identifiers.
 
 * **Custom Separator**
   Optional separator between segments
-  Example: `INV-20230101-001`
+  Example: `INV-20230101-0001`
+
+---
+
+## 🎯 Use Cases
+
+| Use Case | Example Output |
+| --- | --- |
+| Invoice Number | `INV-20250101-0001` |
+| Purchase Order | `PO-20250101-0001` |
+| Transfer Number | `TRF-20250101-0001` |
+| Inbound Receipt | `IB-20250101-0001` |
+| Support Ticket | `TKT-20250101-0001` |
+| Delivery Order | `DO-20250101-0001` |
+| Quotation | `QT-20250101-0001` |
+| Credit Note | `CN-20250101-0001` |
+| Payment Receipt | `REC-20250101-0001` |
+| Work Order | `WO-20250101-0001` |
+| Booking / Reservation | `BK-20250101-0001` |
 
 ---
 
@@ -59,6 +77,13 @@ const code = generator.generate();
 console.log(code);
 // INV-20230511-0001
 
+// Parse a code
+console.log(generator.parse('INV-20230511-0001'));
+// { prefix: 'INV', date: '20230511', sequence: 1 }
+
+// Reset the generator sequence
+generator.reset();
+
 // Validate an existing code
 console.log(generator.validate('INV-20230511-0001'));
 // true
@@ -75,11 +100,32 @@ console.log(generator.increment('INV-20230511-0001'));
 ```ts
 const generator = new SequentialGenerator({
   prefix: 'INV',
-  timeZone: 'America/New_York',
-  dateFormat: 'YYMMDD',
-  sequentialLength: 6,
+  timeZone: 'Asia/Bangkok',
+  dateFormat: 'YYYYMMDD',
+  sequentialLength: 6, // → INV20250101000001
 });
 ```
+
+### Adjusting Sequence Length
+
+The `sequentialLength` option controls how many digits the sequence number has (default: `4`).
+
+```ts
+// Default (4 digits)
+new SequentialGenerator({ prefix: 'INV', timeZone: 'Asia/Bangkok' });
+// → INV202501010001
+
+// 3 digits
+new SequentialGenerator({ prefix: 'INV', timeZone: 'Asia/Bangkok', sequentialLength: 3 });
+// → INV20250101001
+
+// 6 digits
+new SequentialGenerator({ prefix: 'INV', timeZone: 'Asia/Bangkok', sequentialLength: 6 });
+// → INV20250101000001
+```
+
+> The sequence will automatically expand beyond the configured length when the limit is reached
+> (e.g. `9999` → `00001` when `sequentialLength` is `4`).
 
 ---
 
@@ -105,32 +151,53 @@ new SequentialGenerator(options: {
 | ----------------------- | --------------------------------------------------------- |
 | `generate()`            | Generates a new sequential code based on the current date |
 | `validate(code)`        | Validates whether a code matches the expected format      |
+| `parse(code)`           | Decomposes a code into its components (prefix, date, seq) |
 | `increment(code)`       | Returns the next sequential code (stateless)              |
+| `reset()`               | Resets internal sequence and date state                   |
 | `extractDate(code)`     | Extracts the date portion from a code                     |
 | `extractSequence(code)` | Extracts the numeric sequence from a code                 |
 
 ---
 
-## 📅 Supported Date Formats
+## 📅 Date Format & 🌐 Timezone
 
-This library supports all date formats provided by **Day.js**.
-Commonly used patterns include:
+This library uses **[Day.js](https://day.js.org/) `^1.11.19`** for date and timezone handling.
 
-| Pattern | Description      | Example |
-| ------- | ---------------- | ------- |
-| `YYYY`  | 4-digit year     | `2024`  |
-| `YY`    | 2-digit year     | `24`    |
-| `MM`    | Month (2 digits) | `01`    |
-| `DD`    | Day (2 digits)   | `31`    |
-| `HH`    | Hour (24h)       | `13`    |
-| `mm`    | Minute           | `45`    |
-| `Q`     | Quarter          | `1`     |
+### Date Format
 
-### Examples
+All [Day.js format tokens](https://day.js.org/docs/en/display/format) are supported. The default is `YYYYMMDD`.
 
-* `YYYYMMDD` → `20241231` (daily reset)
-* `YYYYMM` → `202412` (monthly reset)
-* `YY` → `24` (yearly reset)
+| Format | Output | Resets every |
+| --- | --- | --- |
+| `YYYYMMDD` | `20250101` | Day |
+| `YYYYMM` | `202501` | Month |
+| `YY` | `25` | Year |
+
+### Timezone
+
+The `timeZone` option accepts **IANA timezone names** via the [Day.js timezone plugin](https://day.js.org/docs/en/plugin/timezone). The default is `UTC`.
+
+| Region | timeZone value |
+| --- | --- |
+| UTC (default) | `UTC` |
+| Thailand | `Asia/Bangkok` |
+| Japan | `Asia/Tokyo` |
+| London | `Europe/London` |
+| New York | `America/New_York` |
+| Los Angeles | `America/Los_Angeles` |
+
+For the full list, see the [IANA timezone database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
+---
+
+## 🏗 Dual Package Support
+
+This library is published as a **Dual Package**, supporting both:
+
+* **CommonJS** (`require`)
+* **ES Modules** (`import`)
+
+It is compatible with modern build tools like Vite, Webpack, and Next.js, as well as classic Node.js environments.
 
 ---
 

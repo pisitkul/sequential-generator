@@ -77,6 +77,33 @@ export class SequentialGenerator {
   }
 
   /**
+   * Resets the internal generator state (sequence and last date).
+   * Useful for testing or manual state management.
+   */
+  public reset(): void {
+    this.currentSequence = 0;
+    this.lastGeneratedDate = null;
+  }
+
+  /**
+   * Parses a code into its constituent parts based on current configuration.
+   * @param code - The code to parse.
+   * @returns An object containing the prefix, date, and sequence number.
+   * @throws Will throw if the code is invalid.
+   */
+  public parse(code: string): { prefix: string; date: string; sequence: number } {
+    if (!this.validate(code)) {
+      throw new Error('Invalid code format provided to parse');
+    }
+
+    return {
+      prefix: this.prefix,
+      date: this.extractDate(code),
+      sequence: this.extractSequence(code),
+    };
+  }
+
+  /**
    * Generates the next sequential code.
    * @returns The generated sequential code string.
    * @throws Will throw an error if the sequence number exceeds the defined length.
