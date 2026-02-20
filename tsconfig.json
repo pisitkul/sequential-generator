@@ -2,11 +2,12 @@
   "compilerOptions": {
     "target": "ES2019",
     "module": "CommonJS",
-    "outDir": "dist",
+    "outDir": "dist/cjs",
     "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "declaration": true
   },
   "include": ["src"]
 }
